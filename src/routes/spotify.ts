@@ -1,62 +1,4 @@
-export interface SpotifyUser {
-    id: string;
-    displayName: string;
-    email: string;
-    followers: {
-        href: string;
-        total: number;
-    };
-    images: {
-        url: string;
-        width?: number;
-        height?: number;
-    }[];
-    href: string;
-}
-
-export interface SpotifyArtist {
-    id: string;
-    name: string;
-    images: {
-        url: string;
-        width?: number;
-        height?: number;
-    }[];
-    type: string;
-    uri: string;
-}
-
-export interface SpotifyAlbum {
-    id: string;
-    name: string;
-    releaseDate: string;
-    totalTracks: number;
-    images: {
-        url: string;
-        width?: number;
-        height?: number;
-    }[];
-    type: string;
-    uri: string;
-    artists: SpotifyArtist[];
-}
-
-export interface SpotifyTrack {
-    id: string;
-    name: string;
-    artists: SpotifyArtist[];
-    album: SpotifyAlbum;
-    durationMs: number;
-    explicit: boolean;
-    popularity: number;
-    previewUrl: string | null;
-    href: string;
-    type: string;
-    uri: string;
-    externalUrls: {
-        spotify: string;
-    };
-}
+import type { SpotifyUser, SpotifyArtist, SpotifyAlbum, SpotifyTrack } from './interfaces';
 
 export class Spotify {
     static async getUserInfo(accessToken: string): Promise<SpotifyUser> {
@@ -65,7 +7,7 @@ export class Spotify {
             const response = await fetch('https://api.spotify.com/v1/me', {
                 headers: {
                     'Authorization': `Bearer ${accessToken}`
-                }
+                }   
             });
 
             if (!response.ok) {
@@ -172,5 +114,55 @@ export class Spotify {
         };
     }
 
+    static async fetchTopArtists(accessToken: string, limit: number = 25): Promise<SpotifyArtist[]> {
+        const apiUrl = `https://api.spotify.com/v1/me/top/artists?limit=${limit}`;
+
+        try {
+            console.log('Fetching top artists with access token:', accessToken);
+            const response = await fetch(apiUrl, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Failed to fetch top artists: ${errorMessage}`);
+            }
+
+            const data = await response.json();
+            console.log("Top artists data:", data);
+
+            return this.mapSpotifyArtists(data.items);
+
+        } catch (error) {
+            console.error("Error fetching top artists:", error);
+            throw error;
+        }
+    }
+
+    static async getArtistInfo(accessToken: string, artistId: string): Promise<SpotifyArtist[]> {
+        const apiUrl = `https://api.spotify.com/v1/artists/${artistId}`;
+    
+        try {
+            const response = await fetch(apiUrl, {
+                headers: {
+                    'Authorization': `Bearer ${accessToken}`
+                }
+            });
+    
+            if (!response.ok) {
+                const errorMessage = await response.text();
+                throw new Error(`Failed to fetch artist information: ${errorMessage}`);
+            }
+    
+            const artistData = await response.json();
+            return this.mapSpotifyArtists(artistData); // Use mapSpotifyArtists instead of mapSpotifyArtist
+    
+        } catch (error) {
+            console.error('Error fetching artist information:', error);
+            throw error;
+        }
+    }
     
 }
