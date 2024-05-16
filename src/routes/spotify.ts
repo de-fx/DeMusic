@@ -91,9 +91,12 @@ export class Spotify {
         return artists.map((artist: any) => ({
             id: artist.id,
             name: artist.name,
-            images: [],  // Placeholder for images, if needed
+            images: artist.images || [],  // Use existing images or an empty array
             type: artist.type,
-            uri: artist.uri
+            uri: artist.uri,
+            externalUrls: {
+                spotify: artist.external_urls.spotify
+            }
         }));
     }
 

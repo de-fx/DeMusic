@@ -1,10 +1,11 @@
 <!-- App.svelte -->
 <script>
     import { Router, Route } from "svelte-routing";
-    import Main from "./main.svelte";
+    import Page from "./+page.svelte";
+    import Profile from "./Profile.svelte";
 </script>
 
 <Router>
-    <Route path="/login"/>
-    <Route path="/home" component={Main}/>
+    <Route path="/login" component={Page}/>
+    <Route path="/profile" component={Profile}/>
 </Router>

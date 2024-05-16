@@ -1,11 +1,12 @@
 <script lang="ts">
-    import Main from "./main.svelte";
-    import { onMount } from "svelte";
+    import Main from "./Profile.svelte";
+    import {onMount } from "svelte";
+
     
     const CLIENT_ID = import.meta.env.VITE_CLIENT_ID;
     const REDIRECT_URI = "http://localhost:5173";
     const AUTH_ENDPOINT = "https://accounts.spotify.com/authorize";
-    const SCOPES = "user-read-private user-read-email user-top-read";   
+    const SCOPES = "user-read-private user-read-email user-top-read";
     function login(){
         const LOGIN_URI = new URLSearchParams({
             client_id:CLIENT_ID,
@@ -15,7 +16,6 @@
         });
         window.location.href = `${AUTH_ENDPOINT}?${LOGIN_URI}`;
     }
-
     let isLoggedIn = false;
     let urlParams: URLSearchParams | null = null; // Declare urlParams variable
     // Check if the page has been redirected from Spotify after successful login
@@ -25,8 +25,6 @@
         isLoggedIn = true;
     }
 });
-
-
 
 </script>
 {#if isLoggedIn}
