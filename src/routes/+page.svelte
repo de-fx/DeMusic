@@ -1,3 +1,6 @@
+<svelte:head>
+  <title>DeMusic</title>
+</svelte:head>
 <script lang="ts">
   import Main from "./Profile.svelte";
   import { onMount } from "svelte";
