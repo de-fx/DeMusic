@@ -28,67 +28,55 @@
     window.location.href = "/";
   }
 </script>
-
 <main>
-    {#if userInfo}
-      <div class="profile">
-        <img src={userInfo.images[1].url} alt="avatar" />
-        <h1>{userInfo.displayName}</h1>
-        <p>Followers: {userInfo.followers.total}</p>
-        <button type="button" on:click={logout}>Log Out</button>
-      </div>
-    {/if}
-  
-    <div class="divider"></div>
-  
-    <div class="content">
-      <div class="tracks">
-        <h2>Top Tracks</h2>
-  
-        <ul>
-          {#each topTracks.slice(0, 5) as track}
-            <li>
-              <a href={track.externalUrls.spotify} target="_blank">
-                <div class="track-info">
-                  {#if track.album.images[2]?.url}
-                    <img src={track.album.images[2].url} alt="Album cover" class="album-cover"/>
-                  {/if}
-                    <span class="track-name">{track.name}</span><br />
-                    {#each track.artists as artist}
-                      {#if artist.externalUrls.spotify}
-                        <a href={artist.externalUrls.spotify} target="_blank" class="artist-name">{artist.name}</a><br />
-                      {:else}
-                        <span class="artist-name">{artist.name}</span><br />
-                      {/if}
-                    {/each}
-                </div>
-              </a>
-            </li>
-          {/each}
-        </ul>
-      </div>
-  
-      <div class="artists">
-        <h2>Top Artists</h2>
-        <ul>
-          {#each topArtists.slice(0, 5) as artist}
-            <li>
-              {#if artist.externalUrls?.spotify}
-                <a href={artist.externalUrls.spotify} target="_blank">
-                  <img src={artist.images[2].url} alt={artist.name} class="artist-image" />
-                  <span class="artist-name">{artist.name}</span>
-                </a>
-              {:else}
-                {artist.name}
-              {/if}
-            </li>
-          {/each}
-        </ul>
-      </div>
+  {#if userInfo}
+    <div class="profile">
+      <img src={userInfo.images[1].url} alt="avatar" />
+      <h1>{userInfo.displayName}</h1>
+      <p>Followers: {userInfo.followers.total}</p>
+      <button type="button" on:click={logout}>Log Out</button>
     </div>
-  </main>  
-<style>
+  {/if}
 
+  <div class="divider"></div>
+
+  <div class="content">
+    <div class="tracks">
+      <h2>Top Tracks</h2>
+      <ul>
+        {#each topTracks.slice(0, 5) as track}
+          <li class="track-info">
+            {#if track.album.images[2]?.url}
+              <img src={track.album.images[2].url} alt="Album cover" class="album-cover" />
+            {/if}
+            <div>
+              <a href={track.externalUrls.spotify} target="_blank" class="track-name">{track.name}</a><br />
+              {#each track.artists as artist}
+                <a href={artist.externalUrls.spotify} target="_blank" class="artist-name">{artist.name}</a>
+              {/each}
+            </div>
+          </li>
+        {/each}
+      </ul>
+    </div>
+
+    <div class="artists">
+      <h2>Top Artists</h2>
+      <ul>
+        {#each topArtists.slice(0, 5) as artist}
+          <li class="artist-info">
+            {#if artist.images[2]?.url}
+              <img src={artist.images[2].url} alt="{artist.name}" class="artist-image" />
+            {/if}
+            <a href={artist.externalUrls.spotify} target="_blank" class="artist-name">{artist.name}</a>
+          </li>
+        {/each}
+      </ul>
+    </div>
+  </div>
+</main>
+ 
+<style>
 /* Main styles */
 main {
   padding: 10px 20px; /* Reduce padding */
@@ -145,8 +133,9 @@ main {
   display: flex;
   justify-content: space-between;
   width: 80%;
-  height: 70%; /* Reduce content height */
+  height: calc(100vh - 300px); /* Adjust height to fit within viewport */
   margin-bottom: 10px; /* Reduce margin */
+  overflow-y: hidden; /* Disable vertical scrolling */
 }
 
 /* Tracks and Artists styles */
@@ -156,7 +145,6 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  overflow-y: auto; /* Enable vertical scrolling if content exceeds viewport */
 }
 
 .tracks h2,
@@ -169,8 +157,8 @@ main {
 /* Album cover and Artist image styles */
 .album-cover,
 .artist-image {
-  width: 50px; /* Reduce width */
-  height: 50px; /* Reduce height */
+  width: 60px; /* Adjust width */
+  height: 60px; /* Adjust height */
   border-radius: 8px;
   margin-bottom: 5px; /* Reduce margin */
 }
@@ -180,12 +168,24 @@ main {
 .artist-info {
   display: flex;
   align-items: center;
+  margin-bottom: 15px; /* Add space between items */
 }
 
-.track-name,
-.artist-name {
-  font-size: 1rem; /* Reduce font size */
+.track-name {
+  font-size: 1.2rem; /* Adjust font size */
+  font-weight: bold;
   margin-left: 10px; /* Add margin to separate image from text */
+}
+
+.artist-name {
+  font-size: 1em; /* Adjust font size */
+  margin-left: 10px; /* Add margin to separate image from text */
+  color: grey; /* Different color to differentiate */
+}
+
+.track-info a,
+.artist-info a {
+  text-decoration: none; /* Remove underline */
 }
 
 /* Remove bullet points from lists */
@@ -193,12 +193,12 @@ main {
 .artists ul {
   list-style-type: none;
   padding: 0;
+  margin: 0; /* Remove default margin */
 }
 
 /* Remove underlines from links */
 a {
   text-decoration: none;
+  color: inherit;
 }
-
-
 </style>
