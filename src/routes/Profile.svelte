@@ -117,6 +117,7 @@ main {
   color: #fff;
   font-weight: 700;
   cursor: pointer;
+  font-family: "Gotham Light";
   font-size: medium;
 }
 
