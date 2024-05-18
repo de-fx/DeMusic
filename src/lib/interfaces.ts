@@ -1,5 +1,5 @@
 
-export interface SpotifyUser {
+export interface User {
     id: string;
     displayName: string;
     email: string;
@@ -15,24 +15,22 @@ export interface SpotifyUser {
     href: string;
 }
 
-export interface SpotifyExternalUrls {
-    spotify?: string;
-}
-
-export interface SpotifyArtist {
+export interface Artist {
     id: string;
     name: string;
     images: { url: string; width: number; height: number }[];
     type: string;
     uri: string;
-    externalUrls: SpotifyExternalUrls;
+    externalUrls: {
+        spotify?: string;
+    };
 }
 
-export interface SpotifyTrack {
+export interface Track {
     id: string;
     name: string;
-    artists: SpotifyArtist[];
-    album: SpotifyAlbum;
+    artists: Artist[];
+    album: Album;
     durationMs: number;
     explicit: boolean;
     popularity: number;
@@ -40,10 +38,12 @@ export interface SpotifyTrack {
     href: string;
     type: string;
     uri: string;
-    externalUrls: SpotifyExternalUrls;
+    externalUrls: {
+        spotify?: string;
+    }
 }
 
-export interface SpotifyAlbum {
+export interface Album {
     id: string;
     name: string;
     releaseDate: string;
@@ -51,5 +51,19 @@ export interface SpotifyAlbum {
     images: { url: string; width: number; height: number }[];
     type: string;
     uri: string;
-    artists: SpotifyArtist[];
+    artists: Artist[];
 }
+
+export interface Playlist {
+    id: string;
+    name: string;
+    images: {
+        url: string;
+        height?:number;
+        width?:number
+    };
+    description: string;
+    tracks: {
+      items: { track: Track }[];
+    };
+  }

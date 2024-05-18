@@ -1,7 +1,8 @@
-import type { SpotifyUser, SpotifyArtist, SpotifyAlbum, SpotifyTrack } from './interfaces';
+import type { User, Artist, Album,Track, Playlist } from './interfaces';
 
 export class Spotify {
-    static async getUserInfo(accessToken: string): Promise<SpotifyUser> {
+    
+    static async fetchUser(accessToken: string): Promise<User> {
         try {
             console.log('Fetching user info with access token:', accessToken);
             const response = await fetch('https://api.spotify.com/v1/me', {
@@ -18,7 +19,7 @@ export class Spotify {
             const userData = await response.json();
             console.log("User data:", userData);
 
-            const spotifyUser: SpotifyUser = {
+            const spotifyUser: User = {
                 id: userData.id,
                 displayName: userData.display_name,
                 email: userData.email,
@@ -41,7 +42,7 @@ export class Spotify {
         }
     }
 
-    static async fetchTopTracks(accessToken: string): Promise<SpotifyTrack[]> {
+    static async fetchTopTracks(accessToken: string): Promise<Track[]> {
         const apiUrl = 'https://api.spotify.com/v1/me/top/tracks';
 
         try {
@@ -68,7 +69,7 @@ export class Spotify {
         }
     }
 
-    static mapSpotifyTracks(items: any[]): SpotifyTrack[] {
+    static mapSpotifyTracks(items: any[]): Track[] {
         return items.map((track: any) => ({
             id: track.id,
             name: track.name,
@@ -87,7 +88,7 @@ export class Spotify {
         }));
     }
 
-    static mapSpotifyArtists(artists: any[]): SpotifyArtist[] {
+    static mapSpotifyArtists(artists: any[]): Artist[] {
         return artists.map((artist: any) => ({
             id: artist.id,
             name: artist.name,
@@ -100,7 +101,7 @@ export class Spotify {
         }));
     }
 
-    static mapSpotifyAlbum(album: any): SpotifyAlbum {
+    static mapSpotifyAlbum(album: any): Album {
         return {
             id: album.id,
             name: album.name,
@@ -117,7 +118,7 @@ export class Spotify {
         };
     }
 
-    static async fetchTopArtists(accessToken: string, limit: number = 25): Promise<SpotifyArtist[]> {
+    static async fetchTopArtists(accessToken: string, limit: number = 25): Promise<Artist[]> {
         const apiUrl = `https://api.spotify.com/v1/me/top/artists?limit=${limit}`;
 
         try {
@@ -144,7 +145,7 @@ export class Spotify {
         }
     }
 
-    static async getArtistInfo(accessToken: string, artistId: string): Promise<SpotifyArtist[]> {
+    static async getArtistInfo(accessToken: string, artistId: string): Promise<Artist[]> {
         const apiUrl = `https://api.spotify.com/v1/artists/${artistId}`;
     
         try {
@@ -167,5 +168,24 @@ export class Spotify {
             throw error;
         }
     }
-    
+    static async fetchPlaylists(accessToken: string): Promise<Playlist[]> {
+        const apiUrl = 'https://api.spotify.com/v1'
+        const response = await fetch(`${apiUrl}/me/playlists`, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`
+          }
+        });
+        const data = await response.json();
+        return data.items;
+      }
+
+      static async fetchPlaylist(token: string, id: string): Promise<Playlist[]> {
+        const apiUrl = 'https://api.spotify.com/v1';
+        const response = await fetch(`${apiUrl}/playlists/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        return response.json();
+      }
 }

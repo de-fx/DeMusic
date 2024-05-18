@@ -1,19 +1,24 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Spotify } from "./spotify";
-  import type { SpotifyUser, SpotifyTrack, SpotifyArtist } from "./interfaces";
+  import { Spotify } from "../lib/spotify";
+  import type { User, Track, Artist } from "../lib/interfaces";
+  import { goto } from '$app/navigation';
+
+  const goToPlaylists = () => {
+    goto('/playlists');
+  };
 
   export let accessToken: string | null | undefined;
 
-  let userInfo: SpotifyUser | null = null;
-  let topTracks: SpotifyTrack[] = [];
-  let topArtists: SpotifyArtist[] = [];
+  let userInfo: User | null = null;
+  let topTracks: Track[] = [];
+  let topArtists: Artist[] = [];
 
   onMount(async () => {
     if (accessToken) {
       const validAccessToken = accessToken as string;
       try {
-        userInfo = await Spotify.getUserInfo(validAccessToken);
+        userInfo = await Spotify.fetchUser(validAccessToken);
         topTracks = await Spotify.fetchTopTracks(validAccessToken);
         topArtists = await Spotify.fetchTopArtists(validAccessToken);
       } catch (error) {
@@ -36,7 +41,7 @@
       <img src={userInfo.images[1].url} alt="avatar" />
       <h1>{userInfo.displayName}</h1>
       <h3>Followers: {userInfo.followers.total}</h3>
-      <button type="button" on:click={logout}>Log Out</button>
+      <button type="button" on:click={goToPlaylists}>PlayLists</button>
     </div>
   {/if}
 
@@ -227,5 +232,21 @@
   a {
     text-decoration: none;
     color: inherit;
+  }
+  .profile button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: #1db954;
+    border: none;
+    border-radius: 25px;
+    color: #fff;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: "JetBrains Mono";
+    font-size: large;
+  }
+
+  .profile button:nth-of-type(2) {
+    background-color: #535353; /* Different color for the playlists button */
   }
 </style>
