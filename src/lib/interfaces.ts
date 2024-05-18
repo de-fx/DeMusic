@@ -1,4 +1,3 @@
-
 export interface User {
     id: string;
     displayName: string;
@@ -61,9 +60,12 @@ export interface Playlist {
         url: string;
         height?:number;
         width?:number
-    };
+    }[];
     description: string;
+    externalUrls:{
+        spotify?:string;
+    }
     tracks: {
       items: { track: Track }[];
     };
-  }
+}

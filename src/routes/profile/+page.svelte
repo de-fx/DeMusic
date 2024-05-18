@@ -1,12 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { Spotify } from "../lib/spotify";
-  import type { User, Track, Artist } from "../lib/interfaces";
-  import { goto } from '$app/navigation';
-
-  const goToPlaylists = () => {
-    goto('/playlists');
-  };
+  import { onMount } from "svelte"; 
+  import { Spotify } from "../../lib/spotify";
+  import type { User, Track, Artist } from "../../lib/interfaces";
+  import { goto } from "$app/navigation";
 
   export let accessToken: string | null | undefined;
 
@@ -33,15 +29,23 @@
     localStorage.removeItem("access_token");
     window.location.href = "/";
   }
+// Function to navigate to the playlists route
+function goToPlaylists() {
+  if (accessToken) {
+      goto(`/playlists?accessToken=${accessToken}`);
+    } else {
+      console.error("No access token provided");
+    }
+  }
 </script>
-
 <main>
   {#if userInfo}
     <div class="profile">
       <img src={userInfo.images[1].url} alt="avatar" />
       <h1>{userInfo.displayName}</h1>
       <h3>Followers: {userInfo.followers.total}</h3>
-      <button type="button" on:click={goToPlaylists}>PlayLists</button>
+      <button type="button" on:click={logout}>Log Out</button>
+      <button type="button" on:click={goToPlaylists}>Playlists</button>
     </div>
   {/if}
 
@@ -242,10 +246,10 @@
     color: #fff;
     font-weight: 700;
     cursor: pointer;
-    font-family: "JetBrains Mono";
+    font-family: "Gotham";
     font-size: large;
   }
-
+  
   .profile button:nth-of-type(2) {
     background-color: #535353; /* Different color for the playlists button */
   }
