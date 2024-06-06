@@ -30,13 +30,16 @@
 
 <main>
   <div class="playlists">
+
     {#if playlists.length > 0}
+    <h1>Your Library</h1>
+    <h2>Playlists</h2>
       {#each playlists as playlist}
           <a href={playlist.externalUrls?.spotify} class="playlist" target="_blank">
             {#if playlist.images && playlist.images.length > 0}
               <img src={playlist.images[0]?.url} alt={playlist.name} class="playlist-cover"/>
             {/if}
-            <span>{playlist.name}</span>
+            <h3>{playlist.name}</h3>
           </a>
       {/each}
     {:else}
@@ -49,8 +52,8 @@
 <style>
   .playlists {
     display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
+    flex-direction: column;
+    gap: 25px;
     color: white;
   }
 
@@ -61,9 +64,9 @@
   }
 
   .playlist-cover {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
     margin-right: 10px;
   }
 </style>
